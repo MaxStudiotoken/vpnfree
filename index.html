@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPNFree | Navegación Anónima y Segura</title>
+    <meta name="description" content="VPNFree es una VPN gratuita para Android que te permite navegar por la web sin dejar rastro, con total privacidad y seguridad.">
+    <link rel="canonical" href="https://MaxStudiotoken.github.io/vpnfree/">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e17;
+            color: #d0dbe8;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(145deg, #0a1628 0%, #14283e 50%, #09121e 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 3px solid #00aaff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00aaff, #0066ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .sub {
+            font-size: 1.3em;
+            color: #88bbdd;
+            margin-top: 10px;
+        }
+
+        .hero .badge-hero {
+            display: inline-block;
+            margin-top: 20px;
+            background: rgba(0, 170, 255, 0.15);
+            border: 1px solid #00aaff;
+            color: #00aaff;
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        /* ===== SECCIÓN DESCRIPCIÓN ===== */
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin: 50px 0 25px 0;
+            color: #ffffff;
+            border-left: 5px solid #00aaff;
+            padding-left: 20px;
+        }
+
+        .desc-box {
+            background: #111b26;
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid #1e3244;
+            margin-bottom: 30px;
+        }
+
+        .desc-box p {
+            font-size: 1.1rem;
+            color: #bcccd9;
+            margin-bottom: 15px;
+        }
+
+        .desc-box ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .desc-box ul li {
+            background: #0e1822;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border-left: 3px solid #00aaff;
+            color: #d0dde8;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .desc-box ul { grid-template-columns: 1fr; }
+        }
+
+        /* ===== ANIMACIÓN VPN (Canvas) ===== */
+        .vpn-animation-container {
+            background: #0c1420;
+            border: 2px solid #00aaff;
+            border-radius: 30px;
+            padding: 20px;
+            margin: 40px 0;
+            box-shadow: 0 0 50px rgba(0, 170, 255, 0.05);
+            position: relative;
+        }
+
+        #vpnCanvas {
+            width: 100%;
+            height: 420px;
+            display: block;
+            border-radius: 20px;
+            background: #0a111c;
+            cursor: default;
+        }
+
+        .vpn-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .vpn-btn {
+            background: #00aaff;
+            border: none;
+            color: #0a0e17;
+            font-weight: 800;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #00aaff;
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.2);
+        }
+
+        .vpn-btn:hover {
+            background: transparent;
+            color: #00aaff;
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 170, 255, 0.4);
+        }
+
+        .vpn-btn.active {
+            background: #00ff88;
+            border-color: #00ff88;
+            color: #0a0e17;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .vpn-status {
+            font-size: 1.1rem;
+            color: #88bbdd;
+        }
+
+        .vpn-status span {
+            font-weight: 700;
+            color: #ff6666;
+        }
+
+        .vpn-status .secure {
+            color: #00ff88;
+        }
+
+        /* ===== BOTÓN DESCARGA ===== */
+        .download-btn {
+            display: inline-block;
+            background: #00aaff;
+            color: #0a0e17;
+            font-weight: 800;
+            padding: 18px 50px;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            text-decoration: none;
+            margin: 30px 0;
+            transition: all 0.3s;
+            border: 2px solid #00aaff;
+            box-shadow: 0 0 30px rgba(0, 170, 255, 0.2);
+        }
+
+        .download-btn:hover {
+            background: transparent;
+            color: #00aaff;
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(0, 170, 255, 0.4);
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 70px;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #1e3244;
+            color: #556677;
+        }
+
+        footer a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8em; }
+            #vpnCanvas { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>🔒 VPNFree</h1>
+        <p class="sub">Navega sin dejar rastro · Totalmente gratis</p>
+        <div class="badge-hero">🌐 Privacidad y seguridad para todos</div>
+    </section>
+
+    <div class="container">
+
+        <!-- DESCRIPCIÓN -->
+        <h2 class="section-title">📋 ¿Qué es VPNFree?</h2>
+        <div class="desc-box">
+            <p>
+                <strong>VPNFree</strong> es una aplicación de VPN gratuita para Android que te permite navegar por la web con total seguridad, anonimato y sin dejar rastro.
+            </p>
+            <p>
+                Con VPNFree, tu conexión a Internet se cifra y tus datos personales permanecen protegidos frente a miradas indiscretas, hackers o redes Wi-Fi públicas inseguras.
+            </p>
+            <p><strong>Características principales:</strong></p>
+            <ul>
+                <li>🌍 Navegación anónima y sin registro de actividad</li>
+                <li>🔐 Cifrado de extremo a extremo</li>
+                <li>⚡ Alta velocidad y bajo consumo de datos</li>
+                <li>📱 Fácil de usar, solo un clic para conectar</li>
+                <li>🛡️ Protección en redes Wi-Fi públicas</li>
+                <li>🚫 Sin límite de tráfico ni anuncios</li>
+            </ul>
+            <p style="margin-top: 20px; color: #00aaff; font-weight: 700;">
+                VPNFree está diseñada para que disfrutes de Internet con total libertad y seguridad, sin complicaciones.
+            </p>
+        </div>
+
+        <!-- ANIMACIÓN VPN (Canvas) -->
+        <div class="vpn-animation-container">
+            <canvas id="vpnCanvas"></canvas>
+            <div class="vpn-controls">
+                <button class="vpn-btn" id="vpnConnectBtn">🔗 Conectar VPN</button>
+                <div class="vpn-status">
+                    Estado: <span id="vpnStatusText">Desconectado</span>
+                </div>
+            </div>
+            <p style="text-align:center; color:#668899; margin-top:10px; font-size:0.9rem;">
+                🌐 Los puntos representan nodos VPN alrededor del mundo. Al conectar, tu tráfico se encripta y pasa por ellos.
+            </p>
+        </div>
+
+        <!-- BOTÓN DESCARGA -->
+        <div class="center">
+            <a href="https://play.google.com/store/apps/details?id=vargas.maximo.vpnfree" target="_blank" class="download-btn">
+                📲 Descargar VPNFree en Google Play
+            </a>
+        </div>
+
+        <!-- CITA -->
+        <div style="margin-top: 40px; padding: 20px; background: #111b26; border-radius: 15px; border-left: 5px solid #00aaff;">
+            <p style="font-style: italic; color: #b0c4d0;">
+                "Tu privacidad es tu derecho. VPNFree te protege en cada conexión, sin coste ni límites."
+            </p>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 <strong style="color:#00aaff;">VPNFree</strong> · VPN gratuita para Android</p>
+            <p style="margin-top: 8px; font-size: 0.9rem;">
+                Hecho con ❤️ por <a href="https://MaxStudiotoken.github.io/maxstudio/">MaxStudio</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT PARA LA ANIMACIÓN VPN ===== -->
+    <script>
+        (function() {
+            const canvas = document.getElementById('vpnCanvas');
+            const ctx = canvas.getContext('2d');
+            const statusSpan = document.getElementById('vpnStatusText');
+            const connectBtn = document.getElementById('vpnConnectBtn');
+
+            let width, height;
+            let isConnected = false;
+            let animationId = null;
+            let time = 0;
+
+            // Nodos (países) con coordenadas relativas al canvas
+            const nodes = [
+                { x: 0.15, y: 0.20, label: 'US' },
+                { x: 0.35, y: 0.15, label: 'UK' },
+                { x: 0.55, y: 0.10, label: 'DE' },
+                { x: 0.75, y: 0.18, label: 'JP' },
+                { x: 0.85, y: 0.30, label: 'AU' },
+                { x: 0.70, y: 0.50, label: 'BR' },
+                { x: 0.50, y: 0.65, label: 'ZA' },
+                { x: 0.30, y: 0.60, label: 'IN' },
+                { x: 0.10, y: 0.45, label: 'CA' },
+                { x: 0.45, y: 0.35, label: 'FR' },
+                { x: 0.65, y: 0.70, label: 'AR' },
+                { x: 0.20, y: 0.75, label: 'NG' },
+            ];
+
+            // Función para redimensionar
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                width = rect.width;
+                height = rect.height;
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                ctx.scale(dpr, dpr);
+                // Actualizar posiciones de nodos en píxeles
+                nodes.forEach(n => {
+                    n.px = n.x * width;
+                    n.py = n.y * height;
+                });
+            }
+
+            // Dibujar el globo y los nodos
+            function drawScene() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Fondo sutil
+                const grad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width*0.6);
+                grad.addColorStop(0, 'rgba(0, 170, 255, 0.02)');
+                grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, width, height);
+
+                // Dibujar líneas de conexión entre nodos (como red)
+                ctx.strokeStyle = isConnected ? 'rgba(0, 255, 136, 0.15)' : 'rgba(0, 170, 255, 0.15)';
+                ctx.lineWidth = 1.5;
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i+1; j < nodes.length; j++) {
+                        const dx = nodes[i].px - nodes[j].px;
+                        const dy = nodes[i].py - nodes[j].py;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < width * 0.4) {
+                            ctx.beginPath();
+                            ctx.moveTo(nodes[i].px, nodes[i].py);
+                            ctx.lineTo(nodes[j].px, nodes[j].py);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Dibujar "paquetes" viajando entre nodos (solo si conectado)
+                if (isConnected) {
+                    const packetCount = 15;
+                    for (let i = 0; i < packetCount; i++) {
+                        const offset = (time / 60 + i / packetCount) % 1;
+                        const idx1 = Math.floor(i % nodes.length);
+                        const idx2 = (idx1 + 1) % nodes.length;
+                        const n1 = nodes[idx1];
+                        const n2 = nodes[idx2];
+                        const px = n1.px + (n2.px - n1.px) * offset;
+                        const py = n1.py + (n2.py - n1.py) * offset;
+                        ctx.beginPath();
+                        ctx.arc(px, py, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(0, 255, 136, 0.8)';
+                        ctx.fill();
+                        // pequeña estela
+                        ctx.beginPath();
+                        ctx.arc(px - (n2.px - n1.px) * 0.03, py - (n2.py - n1.py) * 0.03, 8, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(0, 255, 136, 0.1)';
+                        ctx.fill();
+                    }
+                }
+
+                // Dibujar nodos (países)
+                nodes.forEach(n => {
+                    // Círculo exterior
+                    ctx.beginPath();
+                    ctx.arc(n.px, n.py, 18, 0, Math.PI * 2);
+                    ctx.fillStyle = isConnected ? '#00ff88' : '#00aaff';
+                    ctx.fill();
+                    ctx.shadowColor = isConnected ? '#00ff88' : '#00aaff';
+                    ctx.shadowBlur = 20;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    // Círculo interior
+                    ctx.beginPath();
+                    ctx.arc(n.px, n.py, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = '#0a111c';
+                    ctx.fill();
+
+                    // Etiqueta
+                    ctx.fillStyle = '#aabbcc';
+                    ctx.font = '12px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText(n.label, n.px, n.py - 22);
+                });
+
+                // Si está conectado, dibujar un escudo/globo de protección alrededor del centro
+                if (isConnected) {
+                    ctx.beginPath();
+                    ctx.arc(width/2, height/2, width * 0.18, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+                    ctx.lineWidth = 3;
+                    ctx.setLineDash([8, 8]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    // Texto "Protegido"
+                    ctx.fillStyle = 'rgba(0, 255, 136, 0.7)';
+                    ctx.font = 'bold 20px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('🛡️', width/2, height/2 - 30);
+                    ctx.fillStyle = '#00ff88';
+                    ctx.font = 'bold 16px Inter, sans-serif';
+                    ctx.fillText('VPN ACTIVA', width/2, height/2 + 20);
+                } else {
+                    // Texto "Desconectado"
+                    ctx.fillStyle = 'rgba(255, 100, 100, 0.4)';
+                    ctx.font = 'bold 18px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('🔓 Desconectado', width/2, height/2);
+                }
+
+                time++;
+            }
+
+            // Bucle de animación
+            function animate() {
+                drawScene();
+                animationId = requestAnimationFrame(animate);
+            }
+
+            // Conectar/desconectar VPN
+            function toggleVPN() {
+                isConnected = !isConnected;
+                if (isConnected) {
+                    statusSpan.textContent = 'Conectado';
+                    statusSpan.className = 'secure';
+                    connectBtn.textContent = '🔒 Desconectar VPN';
+                    connectBtn.classList.add('active');
+                } else {
+                    statusSpan.textContent = 'Desconectado';
+                    statusSpan.className = '';
+                    connectBtn.textContent = '🔗 Conectar VPN';
+                    connectBtn.classList.remove('active');
+                }
+            }
+
+            // Inicializar
+            function init() {
+                resizeCanvas();
+                if (animationId) cancelAnimationFrame(animationId);
+                animate();
+
+                // Conectar botón
+                connectBtn.addEventListener('click', toggleVPN);
+
+                // Redimensionar
+                window.addEventListener('resize', () => {
+                    resizeCanvas();
+                });
+            }
+
+            // Esperar a que el DOM esté listo
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
